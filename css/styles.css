@@ -1,0 +1,285 @@
+/* Estilos Globais */
+:root {
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --form-background: #f4f4f4;
+    --button-background: #007bff;
+    --button-hover: #0056b3;
+    --medicamento-background: #f9f9f9;
+    --detalhes-background: #ffffff;
+    --laboratorio-background: #eeeeee;
+    --input-background: #ffffff;
+    --input-border-color: #ddd;
+    --notification-background: #fff3cd;
+    --notification-color: #856404;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1 {
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+/* Estilos do Formulário */
+form {
+    background: var(--form-background);
+    max-width: 600px;
+    width: 95%;
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 6px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Estilos dos Botões */
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: var(--button-background);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+/* Botões de Exportação e Importação */
+.export-buttons,
+.json-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px; 
+}
+
+.export-buttons button,
+.json-buttons button,
+#export-json,
+#import-json-label {
+    flex: 1 1 200px;
+    max-width: 250px;
+    padding: 10px 15px;
+    background-color: var(--button-background);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.export-buttons button:hover,
+.json-buttons button:hover,
+#export-json:hover,
+#import-json-label:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+/* Tabela de Estoque */
+#estoque {
+    max-width: 1200px;
+    width: 95%;
+    margin: 30px auto;
+    background: var(--medicamento-background);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    text-align: center; /* Centraliza o texto na tabela */
+}
+
+#estoque table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+#estoque th, #estoque td {
+    padding: 15px;
+    text-align: center; /* Centraliza o texto nas células */
+}
+
+#estoque th {
+    background-color: var(--form-background);
+    color: var(--text-color);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#estoque td {
+    background-color: var(--detalhes-background);
+    color: var(--text-color);
+}
+
+#estoque tr {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#estoque tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Filtros */
+.filters {
+    max-width: 800px;
+    width: 95%;
+    margin: 30px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    background: var(--form-background);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#search-bar,
+#filter-laboratorio {
+    flex: 1 1 200px;
+    padding: 12px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 6px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+/* Notificações */
+#notificacao-vencimento {
+    max-width: 800px;
+    width: 95%;
+    margin: 30px auto;
+    padding: 15px;
+    background-color: var(--notification-background);
+    color: var(--notification-color);
+    border: 1px solid var(--notification-color);
+    border-radius: 8px;
+    font-size: 1em;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adiciona sombra para profundidade */
+    transition: transform 0.3s, opacity 0.3s; /* Adiciona transição suave */
+}
+
+#notificacao-vencimento:hover {
+    transform: scale(1.02); /* Leve aumento ao passar o mouse */
+}
+
+/* Estilo para mensagens de erro e sucesso */
+#notificacao-vencimento p {
+    margin: 10px 0; /* Espaçamento entre as mensagens */
+}
+
+#notificacao-vencimento.success {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724; /* Verde escuro */
+    border-color: #c3e6cb; /* Verde mais claro */
+}
+
+#notificacao-vencimento.error {
+    background-color: #f8d7da; /* Vermelho claro */
+    color: #721c24; /* Vermelho escuro */
+    border-color: #f5c6cb; /* Vermelho mais claro */
+}
+
+/* Modo Escuro */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #181818;
+        --text-color: #e0e0e0;
+        --form-background: #282828;
+        --button-background: #0056b3;
+        --button-hover: #007bff;
+        --medicamento-background: #282828;
+        --detalhes-background: #383838;
+        --laboratorio-background: #383838;
+        --input-background: #333333;
+        --notification-background: #856404;
+        --notification-color: #fff;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    form, #estoque, .filters {
+        padding: 15px;
+    }
+
+    .export-buttons button,
+    #export-json,
+    #import-json-label {
+        flex-basis: calc(50% - 10px);
+    }
+
+    #estoque th, #estoque td {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .export-buttons button,
+    #export-json,
+    #import-json-label {
+        flex-basis: 100%;
+    }
+
+    #estoque {
+        font-size: 0.9em;
+    }
+}
