@@ -1,0 +1,228 @@
+/* Estilos Globais */
+:root {
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --form-background: #f4f4f4;
+  --button-background: #007bff;
+  --button-hover: #0056b3;
+  --medicamento-background: #f9f9f9;
+  --detalhes-background: #ffffff;
+  --laboratorio-background: #eeeeee;
+  --input-background: #ffffff;
+  --input-border-color: #ddd;
+  --notification-background: #fff3cd;
+  --notification-color: #856404;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+h1 {
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  color: var(--text-color);
+  margin-bottom: 30px;
+  font-size: 2.5em;
+}
+
+/* Estilos do Formulário */
+form {
+  background: var(--form-background);
+  max-width: 600px;
+  width: 95%;
+  margin: 20px auto;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 6px;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+/* Estilos dos Botões */
+button {
+  display: block;
+  width: 100%;
+  padding: 6px;
+  background-color: var(--button-background);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+/* Botões de Exportação e Importação */
+.export-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px; 
+}
+
+.export-buttons button {
+  flex: 1 1 200px;
+  max-width: 250px;
+}
+
+/* Tabela de Estoque */
+#estoque {
+  max-width: 1200px;
+  width: 100%;
+  margin: 30px auto;
+  background: var(--medicamento-background);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+#estoque table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#estoque th, #estoque td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid var(--input-border-color);
+  font-size: 14px;
+}
+
+#estoque th {
+  background-color: var(--form-background);
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+#estoque td {
+  background-color: var(--detalhes-background);
+  color: var(--text-color);
+}
+
+#estoque tr {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#estoque tr:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Notificações */
+#notificacao-vencimento {
+  max-width: 800px;
+  width: 95%;
+  margin: 30px auto;
+  padding: 15px;
+  background-color: var(--notification-background);
+  color: var(--notification-color);
+  border: 1px solid var(--notification-color);
+  border-radius: 8px;
+  font-size: 1em;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+#notificacao-vencimento:hover {
+  transform: scale(1.02);
+}
+
+/* Estilo para mensagens de erro e sucesso */
+#notificacao-vencimento.success {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+#notificacao-vencimento.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+/* Modo Escuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+      --background-color: #181818;
+      --text-color: #e0e0e0;
+      --form-background: #282828;
+      --button-background: #0056b3;
+      --button-hover: #007bff;
+      --medicamento-background: #282828;
+      --detalhes-background: #383838;
+      --laboratorio-background: #383838;
+      --input-background: #333333;
+      --notification-background: #856404;
+      --notification-color: #fff;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  body {
+      padding: 10px;
+  }
+
+  h1 {
+      font-size: 2em;
+  }
+
+  form, #estoque, .filters {
+      padding: 15px;
+  }
+
+  .export-buttons button {
+      flex-basis: calc(50% - 10px);
+  }
+
+  #estoque th, #estoque td {
+      padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+      font-size: 1.8em;
+  }
+
+  .export-buttons button {
+      flex-basis: 100%;
+  }
+
+  #estoque {
+      font-size: 0.9em;
+  }
+}

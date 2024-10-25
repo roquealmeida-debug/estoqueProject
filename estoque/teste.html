@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Importação JSON</title>
+</head>
+<body>
+    <h1>Teste de Importação JSON</h1>
+    <input type="file" id="import-json" accept=".json">
+    <input type="file" id="import-csv" accept=".csv" style="display: none;">
+    <label for="import-csv" id="import-csv-label">
+        <i class="fas fa-file-import"></i> Importar de CSV
+    </label>
+    <script>
+        document.getElementById('import-json').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedEstoque = JSON.parse(e.target.result);
+                        console.log("Estoque importado:", importedEstoque);
+                    } catch (error) {
+                        console.error('Erro ao importar:', error);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>

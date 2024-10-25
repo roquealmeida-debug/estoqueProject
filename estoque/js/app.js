@@ -29,11 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
     valorLoteInput.addEventListener('input', function() {
         formatCurrency(this);
     });
+
+    // Adicione o event listener para o botão de exportação JSON
+    document.getElementById('export-json').addEventListener('click', exportToJSON);
 });
 
 // Carregar estoque salvo no localStorage ao iniciar
 window.addEventListener('DOMContentLoaded', function() {
-    carregarEstoqueDoLocalStorage();
+    carregarEstoqueDoLocalStorage(); // Carrega o estoque ao iniciar
     verificarMedicamentosVencidos(); // Verifica vencimento após carregar o estoque
 });
 
@@ -49,74 +52,66 @@ document.getElementById('form-medicamento').addEventListener('submit', function 
     const nome = document.getElementById('nome').value.toUpperCase();
     const laboratorio = document.getElementById('laboratorio').value.toUpperCase();
     const tipoServico = document.getElementById('tipoServico').value.toUpperCase();
-    const tipoMedicamento = document.getElementById('tipoMedicamento').value.toUpperCase(); // Certifique-se de que está capturando corretamente
+    const tipoMedicamento = document.getElementById('tipoMedicamento').value.toUpperCase();
     const quantidade = document.getElementById('quantidade').value;
     const validade = document.getElementById('validade').value;
     const valorLote = parseFloat(document.getElementById('valorLote').value.replace('R$ ', '').replace(',', '.'));
     const lote = document.getElementById('lote').value.toUpperCase();
     const valorTotal = (quantidade * valorLote).toFixed(2);
 
-    const editIndex = document.getElementById('edit-index').value;
-
-    if (editIndex !== "") {
-        // Editando medicamento existente
-        estoque[nome][editIndex] = {
-            laboratorio, tipoServico, tipoMedicamento, quantidade, validade, valorLote, lote, valorTotal
+    // Adicionando novo medicamento
+    if (!estoque[nome]) {
+        estoque[nome] = {
+            quantidade: parseInt(quantidade),
+            preco: parseFloat(preco)
         };
-
-        document.getElementById('nome').disabled = false;  // Reabilita o campo nome
-        document.getElementById('edit-index').value = "";  // Reseta o índice de edição
     } else {
-        // Adicionando novo medicamento
-        if (!estoque[nome]) {
-            estoque[nome] = [];
-            medicamentosArray.push(nome);
-            updateDatalist('medicamentos', medicamentosArray);
-        }
-
-        if (!laboratoriosArray.includes(laboratorio)) {
-            laboratoriosArray.push(laboratorio);
-            updateDatalist('laboratorios', laboratoriosArray);
-        }
-
-        estoque[nome].push({
-            laboratorio, tipoServico, tipoMedicamento, quantidade, validade, valorLote, lote, valorTotal
-        });
+        estoque[nome].quantidade += parseInt(quantidade)
     }
 
-    // Atualiza a exibição e o localStorage
+    estoque[nome].push({
+        laboratorio, tipoServico, tipoMedicamento, quantidade, validade, valorLote, lote, valorTotal
+    });
+
+    // Salvar no localStorage
+    salvarEstoqueNoLocalStorage(); // Certifique-se de que esta linha está presente
+    exibirEstoqueNaTabela();
+
+    // Atualizar a exibição e o feedback
     document.getElementById('feedback').style.display = 'block';
     document.getElementById('error-message').style.display = 'none';
     setTimeout(() => {
         document.getElementById('feedback').style.display = 'none';
     }, 3000);
-
-    salvarEstoqueNoLocalStorage(); // Salva no localStorage
-    updateFilterLaboratorio(); // Atualiza o filtro de laboratórios
-    verificarMedicamentosVencidos(); // Verifica vencimento dos medicamentos
-    updateEstoqueDisplay(); // Atualiza exibição
-    resetForm(); // Reseta o formulário
-    verificarMedicamentosVencidos(); // Verifica vencimento após adicionar/editar
 });
 
 // Função para salvar o estoque no localStorage
 function salvarEstoqueNoLocalStorage() {
+    console.log("Salvando estoque no localStorage:", estoque); // Log para verificar o que está sendo salvo
     localStorage.setItem('estoque', JSON.stringify(estoque));
 }
 
 // Função para carregar o estoque do localStorage
 function carregarEstoqueDoLocalStorage() {
-    const estoqueSalvo = localStorage.getItem('estoque');
-    if (estoqueSalvo) {
-        estoque = JSON.parse(estoqueSalvo);
-        medicamentosArray.push(...Object.keys(estoque));
-        laboratoriosArray.push(...new Set(Object.values(estoque).flatMap(lotes => lotes.map(l => l.laboratorio))));
-        updateDatalist('medicamentos', medicamentosArray);
-        updateDatalist('laboratorios', laboratoriosArray);
-        updateFilterLaboratorio(); // Atualiza o filtro após carregar laboratórios
-        updateEstoqueDisplay();
-        verificarMedicamentosVencidos(); // Verifica vencimento após carregar o estoque
+    try {
+        const estoqueSalvo = localStorage.getItem('estoque');
+        console.log("Estoque salvo encontrado:", estoqueSalvo); // Verifique se o valor está sendo lido
+        if (estoqueSalvo) {
+            estoque = JSON.parse(estoqueSalvo);
+            console.log("Estoque carregado:", estoque); // Verifique o estoque carregado
+            medicamentosArray.push(...Object.keys(estoque));
+            laboratoriosArray.push(...new Set(Object.values(estoque).flatMap(lotes => lotes.map(l => l.laboratorio))));
+            updateDatalist('medicamentos', medicamentosArray);
+            updateDatalist('laboratorios', laboratoriosArray);
+            updateFilterLaboratorio(); 
+            updateEstoqueDisplay();
+            verificarMedicamentosVencidos();
+        }
+    } catch (e) {
+        console.error("Erro ao carregar o estoque do localStorage", e);
+        estoque = {};
     }
+    console.log("Estoque carregado:", estoque);
 }
 
 // Função para validar o formulário
@@ -221,6 +216,37 @@ function exportToCSV() {
     a.download = 'estoque_medicamentos.csv';
     a.click();
     URL.revokeObjectURL(url);
+}
+
+function exibirEstoqueNaTabela() {
+    const tabelaEstoque = document.getElementById('estoque');
+    tabelaEstoque.innerHTML = ''; // Limpa a tabela antes de preencher
+
+    // Verifica se há itens no estoque
+    if (Object.keys(estoque).length === 0) {
+        const linha = tabelaEstoque.insertRow();
+        const cell = linha.insertCell();
+        cell.colSpan = 4; // Se você tiver 4 colunas
+        cell.textContent = 'Nenhum medicamento no estoque.';
+        return;
+    }
+
+    // Itera sobre o objeto estoque e insere uma nova linha para cada item
+    for (let nome in estoque) {
+        const medicamento = estoque[nome];
+        const linha = tabelaEstoque.insertRow();
+
+        const cellNome = linha.insertCell();
+        cellNome.textContent = nome;
+
+        const cellQuantidade = linha.insertCell();
+        cellQuantidade.textContent = medicamento.quantidade;
+
+        const cellPreco = linha.insertCell();
+        cellPreco.textContent = medicamento.preco;
+
+        // Adiciona mais células conforme necessário, como para o botão de editar ou excluir
+    }
 }
 
 // Função para exportar para Excel
@@ -362,6 +388,12 @@ async function exportToPDF() {
     doc.save('estoque_medicamentos.pdf');
 }
 
+window.onload = function() {
+    carregarEstoqueDoLocalStorage();
+    exibirEstoqueNaTabela(); // Exibe o estoque na tabela ao carregar a página
+};
+
+
 // Função para editar medicamento
 function editarMedicamento(medicamento, index) {
     const lote = estoque[medicamento][index];
@@ -454,45 +486,70 @@ function exportToJSON() {
     URL.revokeObjectURL(url);
 }
 
-// Função para importar dados de JSON
-function importFromJSON(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const importedEstoque = JSON.parse(e.target.result);
-                estoque = importedEstoque;
-                medicamentosArray.length = 0;
-                laboratoriosArray.length = 0;
-                
-                for (const [nome, lotes] of Object.entries(estoque)) {
-                    medicamentosArray.push(nome);
-                    lotes.forEach(lote => {
-                        if (!laboratoriosArray.includes(lote.laboratorio)) {
-                            laboratoriosArray.push(lote.laboratorio);
-                        }
-                    });
-                }
-                
-                updateDatalist('medicamentos', medicamentosArray);
-                updateDatalist('laboratorios', laboratoriosArray);
-                updateFilterLaboratorio();
-                salvarEstoqueNoLocalStorage();
-                updateEstoqueDisplay();
-                verificarMedicamentosVencidos();
-                alert('Dados importados com sucesso!');
-            } catch (error) {
-                alert('Erro ao importar dados. Verifique se o arquivo é válido.');
-                console.error('Erro ao importar:', error);
-            }
-        };
-        reader.readAsText(file);
-    }
-}
 
 // Adicione estes event listeners no final do arquivo
 document.getElementById('export-json').addEventListener('click', exportToJSON);
 document.getElementById('import-json').addEventListener('change', importFromJSON);
 
+console.log(estoque); // Adicione esta linha para verificar o conteúdo do estoque
+
+// Teste a função diretamente
+function testExport() {
+    estoque = {
+        "Medicamento A": [
+            {
+                laboratorio: "Laboratório X",
+                lote: "12345",
+                validade: "2023-12-31",
+                quantidade: 10,
+                valorLote: 50.00,
+                tipoMedicamento: "Comprimido"
+            }
+        ]
+    };
+    exportToJSON();
+}
+
+document.getElementById('import-file').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file && file.name.endsWith('.json')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                console.log("Dados importados:", importedData);
+
+                // Verificar se os dados importados são válidos
+                if (importedData && typeof importedData === 'object') {
+                    // Mesclar os dados importados com o estoque atual
+                    estoque = { ...estoque, ...importedData };
+
+                    // Atualizar arrays e exibição
+                    medicamentosArray.push(...Object.keys(importedData));
+                    laboratoriosArray.push(...new Set(Object.values(importedData).flatMap(lotes => lotes.map(l => l.laboratorio))));
+
+                    salvarEstoqueNoLocalStorage();  // Salva o estoque atualizado
+                    updateDatalist('medicamentos', medicamentosArray);
+                    updateDatalist('laboratorios', laboratoriosArray);
+                    updateEstoqueDisplay();
+                    verificarMedicamentosVencidos();
+                } else {
+                    alert('O arquivo JSON é inválido.');
+                }
+            } catch (error) {
+                console.error('Erro ao importar JSON:', error);
+                alert('Erro ao importar o arquivo JSON.');
+            }
+        };
+        reader.readAsText(file);
+    } else {
+        alert('Por favor, selecione um arquivo JSON válido.');
+    }
+});
+
+// Chame a função de teste
+testExport();
+
+console.log("Medicamentos Array:", medicamentosArray);
+console.log("Laboratorios Array:", laboratoriosArray);
 

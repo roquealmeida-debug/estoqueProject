@@ -1,0 +1,36 @@
+[
+    {
+        "nome": "Medicamento A",
+        "laboratorio": "Laboratório X",
+        "tipoServico": "Tipo 1",
+        "tipoMedicamento": "Tipo A",
+        "lotes": [
+            {
+                "lote": "Lote 1",
+                "quantidade": 10,
+                "dataValidade": "2023-12-31",
+                "valor": 100
+            },
+            {
+                "lote": "Lote 2",
+                "quantidade": 5,
+                "dataValidade": "2024-01-15",
+                "valor": 50
+            }
+        ]
+    },
+    {
+        "nome": "Medicamento B",
+        "laboratorio": "Laboratório Y",
+        "tipoServico": "Tipo 2",
+        "tipoMedicamento": "Tipo B",
+        "lotes": [
+            {
+                "lote": "Lote 3",
+                "quantidade": 20,
+                "dataValidade": "2023-11-30",
+                "valor": 200
+            }
+        ]
+    }
+]
